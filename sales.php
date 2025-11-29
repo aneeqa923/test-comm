@@ -8,30 +8,40 @@
 		$conn = $pdo->open();
     
 		try{
-			
-			$stmt = $conn->prepare("INSERT INTO sales (user_id, pay_id, sales_date) VALUES (:user_id, :pay_id, :sales_date)");
-			$stmt->execute(['user_id'=>$user['id'], 'pay_id'=>$payid, 'sales_date'=>$date]);
-			$salesid = $conn->lastInsertId();
-			
+			// New try block for duplicate entry check
 			try{
-				$stmt = $conn->prepare("SELECT * FROM cart LEFT JOIN products ON products.id=cart.product_id WHERE user_id=:user_id");
-				$stmt->execute(['user_id'=>$user['id']]);
+				$stmt = $conn->prepare("INSERT INTO sales (user_id, pay_id, sales_date) VALUES (:user_id, :pay_id, :sales_date)");
+				$stmt->execute(['user_id'=>$user['id'], 'pay_id'=>$payid, 'sales_date'=>$date]);
+				$salesid = $conn->lastInsertId();
+				
+				try{
+					$stmt = $conn->prepare("SELECT * FROM cart LEFT JOIN products ON products.id=cart.product_id WHERE user_id=:user_id");
+					$stmt->execute(['user_id'=>$user['id']]);
 
-				foreach($stmt as $row){
-					$stmt = $conn->prepare("INSERT INTO details (sales_id, product_id, quantity) VALUES (:sales_id, :product_id, :quantity)");
-					$stmt->execute(['sales_id'=>$salesid, 'product_id'=>$row['product_id'], 'quantity'=>$row['quantity']]);
+					foreach($stmt as $row){
+						$stmt = $conn->prepare("INSERT INTO details (sales_id, product_id, quantity) VALUES (:sales_id, :product_id, :quantity)");
+						$stmt->execute(['sales_id'=>$salesid, 'product_id'=>$row['product_id'], 'quantity'=>$row['quantity']]);
+					}
+
+					$stmt = $conn->prepare("DELETE FROM cart WHERE user_id=:user_id");
+					$stmt->execute(['user_id'=>$user['id']]);
+
+					$_SESSION['success'] = 'Transaction successful. Thank you.';
+
 				}
-
-				$stmt = $conn->prepare("DELETE FROM cart WHERE user_id=:user_id");
-				$stmt->execute(['user_id'=>$user['id']]);
-
-				$_SESSION['success'] = 'Transaction successful. Thank you.';
-
+				catch(PDOException $e){
+					$_SESSION['error'] = $e->getMessage();
+				}
 			}
 			catch(PDOException $e){
-				$_SESSION['error'] = $e->getMessage();
+				// Check if it's a duplicate entry error (ITN processed it)
+				if(strpos($e->getMessage(), 'Duplicate') !== false){
+					$_SESSION['success'] = 'Transaction successful. Thank you.';
+				}
+				else{
+					$_SESSION['error'] = $e->getMessage();
+				}
 			}
-
 		}
 		catch(PDOException $e){
 			$_SESSION['error'] = $e->getMessage();

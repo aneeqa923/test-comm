@@ -23,58 +23,72 @@
 	        			}
 	        		?>
 	        		
-		       		<?php
-		       			$month = date('m');
-		       			$conn = $pdo->open();
-
-		       			try{
-		       			 	$inc = 3;	
-						    $stmt = $conn->prepare("SELECT *, SUM(quantity) AS total_qty FROM details LEFT JOIN sales ON sales.id=details.sales_id LEFT JOIN products ON products.id=details.product_id WHERE MONTH(sales_date) = '$month' GROUP BY details.product_id ORDER BY total_qty DESC LIMIT 6");
-						    $stmt->execute();
-						    foreach ($stmt as $row) {
-						    	$image = (!empty($row['photo'])) ? 'images/'.$row['photo'] : 'images/noimage.jpg';
-						    	$inc = ($inc == 3) ? 1 : $inc + 1;
-	       						if($inc == 1) echo "<div class='row'>";
-	       						echo "
-	       							<div class='col-sm-4'>
-	       								<div class='box box-solid'>
-		       								<div class='box-body prod-body'>
-		       									<img src='".$image."' width='100%' height='230px' class='thumbnail'>
-		       									<h5><a href='product.php?product=".$row['slug']."'>".$row['name']."</a></h5>
-		       								</div>
-		       								<div class='box-footer'>
-		       									<b>&#36; ".number_format($row['price'], 2)."</b>
-		       								</div>
-	       								</div>
-	       							</div>
-	       						";
-	       						if($inc == 3) echo "</div>";
-						    }
-						    if($inc == 1) echo "<div class='col-sm-4'></div><div class='col-sm-4'></div></div>"; 
-							if($inc == 2) echo "<div class='col-sm-4'></div></div>";
-						}
-						catch(PDOException $e){
-							echo "There is some problem in connection: " . $e->getMessage();
-						}
-
-						$pdo->close();
-
-		       		?> 
-
+	        		<h1 style="color: #3c8dbc; font-weight: bold; margin-bottom: 25px; border-bottom: 3px solid #3c8dbc; padding-bottom: 10px;">
+	        			<i class="fa fa-phone"></i> Contact Us
+	        		</h1>
+	        		
+	        		<p>
+	        			We'd love to hear from you! Whether you have a question about our products, 
+	        			need assistance with an order, or just want to provide feedback, our team 
+	        			is here to help.
+	        		</p>
+	        		
+	        		<div class="row">
+	        			<div class="col-md-6">
+	        				<h4><b><i class="fa fa-map-marker"></i> Our Location</b></h4>
+	        				<p>
+	        					FAST Raggra University<br>
+	        					Islamabad Campus<br>
+	        					
+	        				</p>
+	        				
+	        				<h4><b><i class="fa fa-clock-o"></i> Office Hours</b></h4>
+	        				<p>
+	        					Monday - Friday: 9:00 AM - 6:00 PM<br>
+	        					Saturday: 10:00 AM - 4:00 PM<br>
+	        					Sunday: Closed
+	        				</p>
+	        			</div>
+	        			
+	        			<div class="col-md-6">
+	        				<h4><b><i class="fa fa-envelope"></i> Email Us</b></h4>
+	        				<p>
+	        					General Inquiries: info@buzzwizz.com<br>
+	        					Customer Support: support@buzzwizz.com<br>
+	        					Sales: sales@buzzwizz.com
+	        				</p>
+	        				
+	        				<h4><b><i class="fa fa-phone"></i> Call Us</b></h4>
+	        				<p>
+	        					Customer Service: +92 300 1234567<br>
+	        					Orders & Returns: +92 300 7654321
+	        				</p>
+	        			</div>
+	        		</div>
+	        		
+	        		<hr>
+	        		
+	        		<h4><b>Frequently Asked Questions</b></h4>
+	        		<p><b>What are your delivery times?</b></p>
+	        		<p>We typically deliver within 3-5 business days for standard shipping.</p>
+	        		
+	        		<p><b>Do you offer international shipping?</b></p>
+	        		<p>Currently, we only ship within Pakistan. International shipping is coming soon!</p>
+	        		
+	        		<p><b>What payment methods do you accept?</b></p>
+	        		<p>We accept PayFast online payments and Cash on Delivery (COD).</p>
+	        		
+	        		<div class="callout callout-info" style="margin-top: 30px;">
+	        			<h4><i class="fa fa-info-circle"></i> Need Immediate Help?</h4>
+	        			<p>
+	        				For urgent matters, please call on our customer support helpline 051-1234567
+	        			</p>
+	        		</div>
 	        	</div>
 
-                <div class="col-sm-9">
-                <h4><b>Contact Us</b></h4>
-    <p> We are available all time at FAST Raggra University.
-        Mostly found in Cafe or Hill top.
-        
-    </p>
-                    </div>
-                
 	        	<div class="col-sm-3">
 	        		<?php include 'includes/sidebar.php'; ?>
 	        	</div>
-
 
 	        </div>
 	      </section>

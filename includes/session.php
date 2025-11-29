@@ -1,7 +1,21 @@
 <?php
-	include 'includes/conn.php';
-	session_start();
+	include 'conn.php';
+	
+	// Secure session configuration
+	ini_set('session.cookie_httponly', 1);
+	ini_set('session.use_only_cookies', 1);
+	ini_set('session.cookie_samesite', 'Lax');
+	if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+		ini_set('session.cookie_secure', 1);
+	}
 
+    // Security Headers
+    header('X-Frame-Options: SAMEORIGIN'); // Prevent Clickjacking
+    header('X-Content-Type-Options: nosniff'); // Prevent MIME Sniffing
+    header('X-XSS-Protection: 1; mode=block'); // XSS Protection for older browsers
+	
+	session_start();
+	
 	if(isset($_SESSION['admin'])){
 		header('location: admin/home.php');
 	}

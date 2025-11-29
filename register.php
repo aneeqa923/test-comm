@@ -63,7 +63,7 @@
 						<h2>Thank you for Registering.</h2>
 						<p>Your Account:</p>
 						<p>Email: ".$email."</p>
-						<p>Password: ".$_POST['password']."</p>
+						<p>Please use the password you created during signup to log in.</p>
 						<p>Please click the link below to activate your account.</p>
 						<a href='http://localhost/ecommerce/activate.php?code=".$code."&user=".$userid."'>Activate Account</a>
 					";

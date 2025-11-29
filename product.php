@@ -12,7 +12,9 @@
 		
 	}
 	catch(PDOException $e){
-		echo "There is some problem in connection: " . $e->getMessage();
+        // Security: Don't expose database errors
+        error_log("Connection error: " . $e->getMessage());
+		echo "There is some problem in connection. Please try again later.";
 	}
 
 	//page view
@@ -76,11 +78,11 @@
 		            		</form>
 		            	</div>
 		            	<div class="col-sm-6">
-		            		<h1 class="page-header"><?php echo $product['prodname']; ?></h1>
-		            		<h3><b>&#36; <?php echo number_format($product['price'], 2); ?></b></h3>
-		            		<p><b>Category:</b> <a href="category.php?category=<?php echo $product['cat_slug']; ?>"><?php echo $product['catname']; ?></a></p>
+		            		<h1 class="page-header"><?php echo htmlspecialchars($product['prodname'], ENT_QUOTES, 'UTF-8'); ?></h1>
+		            		<h3><b> RS <?php echo number_format($product['price'], 2); ?></b></h3>
+		            		<p><b>Category:</b> <a href="category.php?category=<?php echo $product['cat_slug']; ?>"><?php echo htmlspecialchars($product['catname'], ENT_QUOTES, 'UTF-8'); ?></a></p>
 		            		<p><b>Description:</b></p>
-		            		<p><?php echo $product['description']; ?></p>
+		            		<p><?php echo htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8'); ?></p>
 		            	</div>
 		            </div>
 		            <br>

@@ -1,6 +1,6 @@
 <?php
 	include 'includes/session.php';
-    
+
 	$conn = $pdo->open();
 
 	$output = array('error'=>false);
@@ -10,8 +10,9 @@
 
 	if(isset($_SESSION['user'])){
 		try{
-			$stmt = $conn->prepare("UPDATE cart SET quantity=:quantity WHERE id=:id");
-			$stmt->execute(['quantity'=>$qty, 'id'=>$id]);
+			// IDOR FIX: Added AND user_id=:user_id to ensure user owns the cart item
+			$stmt = $conn->prepare("UPDATE cart SET quantity=:quantity WHERE id=:id AND user_id=:user_id");
+			$stmt->execute(['quantity'=>$qty, 'id'=>$id, 'user_id'=>$user['id']]);
 			$output['message'] = 'Updated';
 		}
 		catch(PDOException $e){

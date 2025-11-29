@@ -3596,9 +3596,17 @@ class PHPMailer
             //Is it a valid IPv4 address?
             return (bool) filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
         }
-        if (filter_var('http://' . $host, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED)) {
-            //Is it a syntactically valid hostname?
-            return true;
+        // Use global constant with backslash prefix to avoid namespace resolution issues
+        if (defined('FILTER_FLAG_HOST_REQUIRED')) {
+            if (filter_var('http://' . $host, FILTER_VALIDATE_URL, \FILTER_FLAG_HOST_REQUIRED)) {
+                //Is it a syntactically valid hostname?
+                return true;
+            }
+        } else {
+            // Fallback for older PHP versions - basic hostname validation
+            if (preg_match('/^[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?)*$/i', $host)) {
+                return true;
+            }
         }
 
         return false;

@@ -4,8 +4,9 @@
 	function generateRow($from, $to, $conn){
 		$contents = '';
 	 	 
-		$stmt = $conn->prepare("SELECT *, sales.id AS salesid FROM sales LEFT JOIN users ON users.id=sales.user_id WHERE sales_date BETWEEN '$from' AND '$to' ORDER BY sales_date DESC");
-		$stmt->execute();
+        // SQL Injection Fix: Use prepared statement parameters instead of direct interpolation
+		$stmt = $conn->prepare("SELECT *, sales.id AS salesid FROM sales LEFT JOIN users ON users.id=sales.user_id WHERE sales_date BETWEEN :from_date AND :to_date ORDER BY sales_date DESC");
+		$stmt->execute(['from_date'=>$from, 'to_date'=>$to]);
 		$total = 0;
 		foreach($stmt as $row){
 			$stmt = $conn->prepare("SELECT * FROM details LEFT JOIN products ON products.id=details.product_id WHERE sales_id=:id");
@@ -21,7 +22,7 @@
 				<td>'.date('M d, Y', strtotime($row['sales_date'])).'</td>
 				<td>'.$row['firstname'].' '.$row['lastname'].'</td>
 				<td>'.$row['pay_id'].'</td>
-				<td align="right">&#36; '.number_format($amount, 2).'</td>
+				<td align="right">RS '.number_format($amount, 2).'</td>
 			</tr>
 			';
 		}
@@ -29,7 +30,7 @@
 		$contents .= '
 			<tr>
 				<td colspan="3" align="right"><b>Total</b></td>
-				<td align="right"><b>&#36; '.number_format($total, 2).'</b></td>
+				<td align="right"><b>RS '.number_format($total, 2).'</b></td>
 			</tr>
 		';
 		return $contents;
@@ -68,8 +69,8 @@
 	           <tr>  
 	           		<th width="15%" align="center"><b>Date</b></th>
 	                <th width="30%" align="center"><b>Buyer Name</b></th>
-					<th width="40%" align="center"><b>Transaction#</b></th>
-					<th width="15%" align="center"><b>Amount</b></th>  
+						<th width="40%" align="center"><b>Transaction#</b></th>
+						<th width="15%" align="center"><b>Amount</b></th>  
 	           </tr>  
 	      ';  
 	    $content .= generateRow($from, $to, $conn);  

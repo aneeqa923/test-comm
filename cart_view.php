@@ -32,7 +32,10 @@
 	        		<?php
 	        			if(isset($_SESSION['user'])){
 	        				echo "
-	        					<div id='paypal-button'></div>
+	        					<a href='payfast.php' class='btn btn-primary' id='payfast-button' style='display:none;'>
+	        						<i class='fa fa-credit-card'></i> Pay with PayFast
+	        					</a>
+	        					<br><br>
                                 <a href='cod.php' class='btn btn-success'>Cash on Delivery</a>
                                
 	        				";
@@ -152,50 +155,13 @@ function getTotal(){
 		dataType: 'json',
 		success:function(response){
 			total = response;
+			// Show PayFast button when total is available and greater than 0
+			if(total > 0){
+				$('#payfast-button').show();
+			}
 		}
 	});
 }
-</script>
-<!-- Paypal Express -->
-<script>
-paypal.Button.render({
-    env: 'sandbox', // change for production if app is live,
-
-	client: {
-        sandbox:    'ASb1ZbVxG5ZFzCWLdYLi_d1-k5rmSjvBZhxP2etCxBKXaJHxPba13JJD_D3dTNriRbAv3Kp_72cgDvaZ',
-        //production: 'AaBHKJFEej4V6yaArjzSx9cuf-UYesQYKqynQVCdBlKuZKawDDzFyuQdidPOBSGEhWaNQnnvfzuFB9SM'
-    },
-
-    commit: true, // Show a 'Pay Now' button
-
-    style: {
-    	color: 'gold',
-    	size: 'small'
-    },
-
-    payment: function(data, actions) {
-        return actions.payment.create({
-            payment: {
-                transactions: [
-                    {
-                    	//total purchase
-                        amount: { 
-                        	total: total, 
-                        	currency: 'USD' 
-                        }
-                    }
-                ]
-            }
-        });
-    },
-
-    onAuthorize: function(data, actions) {
-        return actions.payment.execute().then(function(payment) {
-			window.location = 'sales.php?pay='+payment.id;
-        });
-    },
-
-}, '#paypal-button');
 </script>
 </body>
 </html>

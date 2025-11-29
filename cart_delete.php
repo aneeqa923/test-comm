@@ -8,8 +8,9 @@
 
 	if(isset($_SESSION['user'])){
 		try{
-			$stmt = $conn->prepare("DELETE FROM cart WHERE id=:id");
-			$stmt->execute(['id'=>$id]);
+			// IDOR FIX: Added AND user_id=:user_id to ensure user owns the cart item
+			$stmt = $conn->prepare("DELETE FROM cart WHERE id=:id AND user_id=:user_id");
+			$stmt->execute(['id'=>$id, 'user_id'=>$user['id']]);
 			$output['message'] = 'Deleted';
 			
 		}

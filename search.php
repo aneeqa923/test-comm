@@ -20,10 +20,12 @@
 	       			$stmt->execute(['keyword' => '%'.$_POST['keyword'].'%']);
 	       			$row = $stmt->fetch();
 	       			if($row['numrows'] < 1){
-	       				echo '<h1 class="page-header">No results found for <i>'.$_POST['keyword'].'</i></h1>';
+                        // XSS FIX: Sanitize output
+	       				echo '<h1 class="page-header">No results found for <i>'.htmlspecialchars($_POST['keyword'], ENT_QUOTES, 'UTF-8').'</i></h1>';
 	       			}
 	       			else{
-	       				echo '<h1 class="page-header">Search results for <i>'.$_POST['keyword'].'</i></h1>';
+                        // XSS FIX: Sanitize output
+	       				echo '<h1 class="page-header">Search results for <i>'.htmlspecialchars($_POST['keyword'], ENT_QUOTES, 'UTF-8').'</i></h1>';
 		       			try{
 		       			 	$inc = 3;	
 						    $stmt = $conn->prepare("SELECT * FROM products WHERE name LIKE :keyword");
@@ -54,7 +56,9 @@
 							
 						}
 						catch(PDOException $e){
-							echo "There is some problem in connection: " . $e->getMessage();
+                            // Security: Don't expose database errors
+                            error_log("Connection error: " . $e->getMessage());
+							echo "There is some problem in connection. Please try again later.";
 						}
 					}
 
