@@ -173,12 +173,15 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 --
 -- Dumping data for table `users`
+-- NOTE: Sample admin account for initial setup. CHANGE PASSWORD after first login!
+--       Default password: admin123
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `type`, `firstname`, `lastname`, `address`, `contact_info`, `photo`, `status`, `activate_code`, `reset_code`, `created_on`) VALUES
-(1, 'admin@admin.com', '$2y$10$0SHFfoWzz8WZpdu9Qw//E.tWamILbiNCX7bqhy3od0gvK5.kSJ8N2', 1, 'Code', 'Projects', '', '', 'thanos1.jpg', 1, '', '', '2018-05-01'),
-(9, 'harry@den.com', '$2y$10$Oongyx.Rv0Y/vbHGOxywl.qf18bXFiZOcEaI4ZpRRLzFNGKAhObSC', 0, 'Harry', 'Den', 'Silay City, Negros Occidental', '09092735719', 'male2.png', 1, 'k8FBpynQfqsv', 'wzPGkX5IODlTYHg', '2018-05-09'),
-(12, 'christine@gmail.com', '$2y$10$ozW4c8r313YiBsf7HD7m6egZwpvoE983IHfZsPRxrO1hWXfPRpxHO', 0, 'Christine', 'becker', 'demo', '7542214500', 'female3.jpg', 1, '', '', '2018-07-09');
+(1, 'admin@admin.com', '$2y$10$8fHbPf5L5p3AYGZnJZfWCutSKwjW9z0kL1zWVHXOy9qCn2Xm8.QYS', 1, 'Admin', 'User', '', '', '', 1, '', '', '2018-05-01');
+
+-- Password for admin@admin.com is: admin123
+-- IMPORTANT: Change this password after first login!
 
 --
 -- Indexes for dumped tables

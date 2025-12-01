@@ -1,9 +1,16 @@
 <?php include 'includes/session.php'; ?>
 <?php
+  // Initialize query parameters
   $where = '';
+  $params = [];
+  
+  // Validate and sanitize category input
   if(isset($_GET['category'])){
-    $catid = $_GET['category'];
-    $where = 'WHERE category_id ='.$catid;
+    $catid = filter_var($_GET['category'], FILTER_VALIDATE_INT);
+    if($catid !== false && $catid > 0){
+      $where = 'WHERE category_id = :category_id';
+      $params = ['category_id' => $catid];
+    }
   }
   
 ?>
@@ -100,7 +107,7 @@
                     try{
                       $now = date('Y-m-d');
                       $stmt = $conn->prepare("SELECT * FROM products $where");
-                      $stmt->execute();
+                      $stmt->execute($params);
                       foreach($stmt as $row){
                         $image = (!empty($row['photo'])) ? '../images/'.$row['photo'] : '../images/noimage.jpg';
                         $counter = ($row['date_view'] == $now) ? $row['counter'] : 0;

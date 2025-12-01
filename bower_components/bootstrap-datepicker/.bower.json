@@ -10,12 +10,12 @@
   },
   "ignore": [],
   "homepage": "https://github.com/eternicode/bootstrap-datepicker",
-  "version": "1.7.1",
-  "_release": "1.7.1",
+  "version": "1.10.1",
+  "_release": "1.10.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.7.1",
-    "commit": "9008cc328620c1695a0c95d036e57d356fca5c03"
+    "tag": "1.10.1",
+    "commit": "722dc29432e89e048e5677b51fb4cfd8bbdab13c"
   },
   "_source": "https://github.com/eternicode/bootstrap-datepicker.git",
   "_target": "^1.7.0",
